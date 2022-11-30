@@ -1,0 +1,29 @@
+#######################################
+# Syntax Coloring Map For RPlatform
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+
+RPlatform	KEYWORD1	RPlatform
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+getLog		KEYWORD2
+readSensor	KEYWORD2
+isStartPressed	KEYWORD2
+stopMotors	KEYWORD2
+setDirection	KEYWORD2
+setPower	KEYWORD2
+setMovementParams	KEYWORD2
+startMotors	KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+FW	LITERAL1
+BW	LITERAL1
