@@ -1,7 +1,8 @@
 #include "Arduino.h"
 #include "RPlatform.h"
 
-RPlatform::RPlatform() {
+RPlatform::RPlatform()
+{
   //Пины, которые отвечают за двигатели, настраиваем на вход
   pinMode(R_F, INPUT);
   pinMode(R_B, INPUT);
@@ -24,7 +25,8 @@ RPlatform::RPlatform() {
   this->_isRightMotorOn = false;
 }
 
-String RPlatform::getLog() {
+String RPlatform::getLog()
+{
   char buffer[128];
   sprintf(buffer, "LM: p=%d dir=%d; RM: p=%d dir=%d; S1=%d; S2=%d; S3=%d; S4=%d; S5=%d",
           this->_leftMotorPower, this->_leftDir,
@@ -35,37 +37,46 @@ String RPlatform::getLog() {
   return buffer;
 }
 
-void RPlatform::stopLeftMotor(bool fullStop = true) {
+void RPlatform::stopLeftMotor(bool fullStop = true)
+{
   /**
      Остановка левого двигателя
   */
   this->_isLeftMotorOn = false;
 
-  if (fullStop) {
+  if (fullStop)
+  {
     digitalWrite(L_F, HIGH);
     digitalWrite(L_B, HIGH);
-  } else {
+  }
+  else
+  {
     digitalWrite(L_F, LOW);
     digitalWrite(L_B, LOW);
   }
 }
 
-void RPlatform::stopRightMotor(bool fullStop = true) {
+void RPlatform::stopRightMotor(bool fullStop = true)
+{
   /**
      Остановка правого двигателя
   */
   this->_isRightMotorOn = false;
 
-  if (fullStop) {
+  if (fullStop)
+  {
     digitalWrite(R_F, HIGH);
     digitalWrite(R_B, HIGH);
-  } else {
+  }
+  else
+  {
     digitalWrite(R_F, LOW);
     digitalWrite(R_B, LOW);
   }
 }
 
-void RPlatform::stopMotors(bool fullStop = true) {
+void RPlatform::stopMotors(bool fullStop = true)
+{
   /*
      Остановка обоих двигателей
   */
@@ -73,34 +84,40 @@ void RPlatform::stopMotors(bool fullStop = true) {
   this->stopRightMotor(fullStop);
 }
 
-int RPlatform::readSensor(int portNumber, bool raw = false) {
+uint8_t RPlatform::readSensor(uint8_t portNumber, bool raw = false)
+{
   /**
      Считывание данных с сенсора в указаном слоте
   */
-  int rawValue = analogRead(this->_sensorPorts[portNumber]);
-  if (raw) return rawValue;
+  uint8_t rawValue = analogRead(this->_sensorPorts[portNumber]);
+  if (raw)
+    return rawValue;
   return map(rawValue, 0, 1023, 0, 100);
 }
 
-bool RPlatform::isStartPressed() {
+bool RPlatform::isStartPressed()
+{
   /**
      Нажата ли кнопка Start
   */
   return !digitalRead(START_BUTTON);
 }
 
-void RPlatform::setLeftMotorDirection(direction dir) {
+void RPlatform::setLeftMotorDirection(direction dir)
+{
   /**
      Направление вращения левого мотора
   */
   this->_leftDir = dir;
 
-  if (this->_isLeftMotorOn) {
+  if (this->_isLeftMotorOn)
+  {
     this->startLeftMotor();
   }
 }
 
-void RPlatform::setRightMotorDirection(direction dir) {
+void RPlatform::setRightMotorDirection(direction dir)
+{
   /**
      Направление вращения правого мотора
   */
@@ -110,7 +127,8 @@ void RPlatform::setRightMotorDirection(direction dir) {
     this->startRightMotor();
 }
 
-void RPlatform::setDirection(direction dir) {
+void RPlatform::setDirection(direction dir)
+{
   /**
      Выбор направления движения платформы
   */
@@ -118,7 +136,8 @@ void RPlatform::setDirection(direction dir) {
   this->setRightMotorDirection(dir);
 }
 
-void RPlatform::setDirection(direction dirL, direction dirR) {
+void RPlatform::setDirection(direction dirL, direction dirR)
+{
   /**
      Выбор направления движения платформы
   */
@@ -126,31 +145,36 @@ void RPlatform::setDirection(direction dirL, direction dirR) {
   this->setRightMotorDirection(dirR);
 }
 
-void RPlatform::setRightMotorPower(int power) {
+void RPlatform::setRightMotorPower(uint8_t power)
+{
   /**
      Мощность правого мотора
   */
-  int p = constrain(power, 0, 100);
+  uint8_t p = constrain(power, 0, 100);
   this->_rightMotorPower = p;
 
-  if (this->_isRightMotorOn) {
+  if (this->_isRightMotorOn)
+  {
     this->startRightMotor();
   }
 }
 
-void RPlatform::setLeftMotorPower(int power) {
+void RPlatform::setLeftMotorPower(uint8_t power)
+{
   /**
      Мощность левого мотора
   */
-  int p = constrain(power, 0, 100);
+  uint8_t p = constrain(power, 0, 100);
   this->_leftMotorPower = p;
 
-  if (this->_isLeftMotorOn) {
+  if (this->_isLeftMotorOn)
+  {
     this->startLeftMotor();
   }
 }
 
-void RPlatform::setPower(int power) {
+void RPlatform::setPower(uint8_t power)
+{
   /**
      Выбор одинаковой мощностя для обоих моторов
   */
@@ -158,7 +182,8 @@ void RPlatform::setPower(int power) {
   this->setRightMotorPower(power);
 }
 
-void RPlatform::setPower(int powerL, int powerR) {
+void RPlatform::setPower(uint8_t powerL, uint8_t powerR)
+{
   /**
      Выбор мощности для каждого мотора отдельно
   */
@@ -166,7 +191,8 @@ void RPlatform::setPower(int powerL, int powerR) {
   this->setRightMotorPower(powerR);
 }
 
-void RPlatform::setMovementParams(direction dirL, direction dirR, int powerL, int powerR) {
+void RPlatform::setMovementParams(direction dirL, direction dirR, uint8_t powerL, uint8_t powerR)
+{
   /**
      Настройка направления и мощности моторов
   */
@@ -174,44 +200,60 @@ void RPlatform::setMovementParams(direction dirL, direction dirR, int powerL, in
   this->setPower(powerL, powerR);
 }
 
-void RPlatform::startLeftMotor() {
+void RPlatform::startLeftMotor()
+{
   /**
      Включении левого мотора
   */
   this->_isLeftMotorOn = true;
 
-  int pwmValue = map(this->_leftMotorPower, 0, 100, 0, 1023);
+  uint8_t pwmValue = map(this->_leftMotorPower, 0, 100, 0, 1023);
 
-  if (this->_leftDir == FW) {
+  if (this->_leftDir == FW)
+  {
     analogWrite(L_F, pwmValue);
     digitalWrite(L_B, LOW);
-  } else {
+  }
+  else
+  {
     analogWrite(L_B, pwmValue);
     digitalWrite(L_F, LOW);
   }
 }
 
-void RPlatform::startRightMotor() {
+void RPlatform::startRightMotor()
+{
   /**
      Включение правого мотора
   */
   this->_isRightMotorOn = true;
 
-  int pwmValue = map(this->_rightMotorPower, 0, 100, 0, 1023);
+  uint8_t pwmValue = map(this->_rightMotorPower, 0, 100, 0, 1023);
 
-  if (this->_rightDir == FW) {
+  if (this->_rightDir == FW)
+  {
     analogWrite(R_F, pwmValue);
     digitalWrite(R_B, LOW);
-  } else {
+  }
+  else
+  {
     analogWrite(R_B, pwmValue);
     digitalWrite(R_F, LOW);
   }
 }
 
-void RPlatform::startMotors() {
+void RPlatform::startMotors()
+{
   /**
      Включение двух моторов одновременно
   */
   this->startLeftMotor();
   this->startRightMotor();
+}
+
+void RPlatform::startForSec(float seconds)
+{
+  this->startMotors();
+  delay(seconds * 1000);
+  this->stopMotors();
 }
