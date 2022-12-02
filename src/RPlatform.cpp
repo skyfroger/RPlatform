@@ -1,6 +1,9 @@
 #include "Arduino.h"
 #include "RPlatform.h"
 
+volatile int RPlatform::_leftStepsCount = 0;
+volatile int RPlatform::_rightStepsCount = 0;
+
 RPlatform::RPlatform()
 {
   /**
@@ -12,6 +15,9 @@ RPlatform::RPlatform()
   pinMode(R_B, INPUT);
   pinMode(L_F, INPUT);
   pinMode(L_B, INPUT);
+
+  pinMode(L_ENC, INPUT);
+  pinMode(R_ENC, INPUT);
 
   // кнопка Start
   pinMode(START_BUTTON, INPUT);
@@ -27,6 +33,9 @@ RPlatform::RPlatform()
   // изначально платформа неподвижна
   this->_isLeftMotorOn = false;
   this->_isRightMotorOn = false;
+
+  attachInterrupt(digitalPinToInterrupt(L_ENC), RPlatform::incLeftSteps, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(R_ENC), RPlatform::incRightSteps, CHANGE);
 }
 
 String RPlatform::getLog()
@@ -36,12 +45,12 @@ String RPlatform::getLog()
    * Метод вернёт строку с текущими настройками платформы и данными с портов.
    */
   char buffer[128];
-  sprintf(buffer, "LM: p=%d dir=%d; RM: p=%d dir=%d; S1=%d; S2=%d; S3=%d; S4=%d; S5=%d",
+  sprintf(buffer, "LM: p=%d dir=%d; RM: p=%d dir=%d; S1=%d; S2=%d; S3=%d; S4=%d; S5=%d steps: %d %d",
           this->_leftMotorPower, this->_leftDir,
           this->_rightMotorPower, this->_rightDir,
           this->readSensor(1), this->readSensor(2),
           this->readSensor(3), this->readSensor(4),
-          this->readSensor(5));
+          this->readSensor(5), RPlatform::_leftStepsCount, RPlatform::_rightStepsCount);
   return buffer;
 }
 
@@ -92,12 +101,12 @@ void RPlatform::stop(bool fullStop = true)
   this->stopRightMotor(fullStop);
 }
 
-uint16_t RPlatform::readSensor(uint8_t portNumber, bool raw = false)
+int RPlatform::readSensor(int portNumber, bool raw = false)
 {
   /**
    * Возвращаем значение, измеренное датчиком в указанном слоте
    */
-  uint8_t rawValue = analogRead(this->_sensorPorts[portNumber]);
+  int rawValue = analogRead(this->_sensorPorts[portNumber]);
   if (raw)
     return rawValue;
   return map(rawValue, 0, 1023, 0, 100);
@@ -153,12 +162,12 @@ void RPlatform::setDirection(direction dirL, direction dirR)
   this->setRightMotorDirection(dirR);
 }
 
-void RPlatform::setRightMotorPower(uint8_t power)
+void RPlatform::setRightMotorPower(int power)
 {
   /**
    * Изменяем мощность правого мотора
    */
-  uint8_t p = constrain(power, 0, 100);
+  int p = constrain(power, 0, 100);
   this->_rightMotorPower = p;
 
   if (this->_isRightMotorOn)
@@ -167,12 +176,12 @@ void RPlatform::setRightMotorPower(uint8_t power)
   }
 }
 
-void RPlatform::setLeftMotorPower(uint8_t power)
+void RPlatform::setLeftMotorPower(int power)
 {
   /**
    * Изменяем мощность левого мотора
    */
-  uint8_t p = constrain(power, 0, 100);
+  int p = constrain(power, 0, 100);
   this->_leftMotorPower = p;
 
   if (this->_isLeftMotorOn)
@@ -181,7 +190,7 @@ void RPlatform::setLeftMotorPower(uint8_t power)
   }
 }
 
-void RPlatform::setPower(uint8_t power)
+void RPlatform::setPower(int power)
 {
   /**
    * Выбор одинаковой мощности для обоих моторов
@@ -190,7 +199,7 @@ void RPlatform::setPower(uint8_t power)
   this->setRightMotorPower(power);
 }
 
-void RPlatform::setPower(uint8_t powerL, uint8_t powerR)
+void RPlatform::setPower(int powerL, int powerR)
 {
   /**
    * Выбор мощности для каждого мотора отдельно
@@ -199,7 +208,7 @@ void RPlatform::setPower(uint8_t powerL, uint8_t powerR)
   this->setRightMotorPower(powerR);
 }
 
-void RPlatform::setRunSettings(direction dirL, direction dirR, uint8_t powerL, uint8_t powerR)
+void RPlatform::setRunSettings(direction dirL, direction dirR, int powerL, int powerR)
 {
   /**
    * Настройка направления и мощности моторов
@@ -215,7 +224,7 @@ void RPlatform::startLeftMotor()
    */
   this->_isLeftMotorOn = true;
 
-  uint8_t pwmValue = map(this->_leftMotorPower, 0, 100, 0, 1023);
+  int pwmValue = map(this->_leftMotorPower, 0, 100, 0, 1023);
 
   if (this->_leftDir == FW)
   {
@@ -236,7 +245,7 @@ void RPlatform::startRightMotor()
    */
   this->_isRightMotorOn = true;
 
-  uint8_t pwmValue = map(this->_rightMotorPower, 0, 100, 0, 1023);
+  int pwmValue = map(this->_rightMotorPower, 0, 100, 0, 1023);
 
   if (this->_rightDir == FW)
   {
@@ -267,4 +276,84 @@ void RPlatform::runTime(float seconds)
   this->run();
   delay(seconds * 1000);
   this->stop();
+}
+
+void RPlatform::runSteps(int steps)
+{
+  /**
+   * Запуск моторов на определённое количество шагов
+   */
+  int startLCount = RPlatform::getLeftSteps();
+  int startRCount = RPlatform::getRightSteps();
+
+  this->run();
+
+  while (steps > RPlatform::getLeftSteps() - startLCount && steps > RPlatform::getRightSteps() - startRCount)
+  {
+    Serial.print(steps);
+    Serial.println(RPlatform::getLeftSteps() - startLCount);
+  }
+
+  this->stop();
+}
+
+void RPlatform::runAngle(int angle)
+{
+  /**
+   * Поворот колёс на заданный угол
+   */
+  int steps = (angle * FULL_TURN_STEPS) / 360;
+  this->runSteps(steps);
+}
+
+void RPlatform::turnLeft(int angle)
+{
+  /**
+   * Поворот платформы налево
+   */
+  direction currentLeftDir = this->_leftDir;
+  direction currentRightDir = this->_rightDir;
+
+  this->setDirection(BW, FW);
+  this->runAngle(angle * PLATFORM_TURN);
+  this->setDirection(currentLeftDir, currentRightDir);
+}
+
+void RPlatform::turnRight(int angle)
+{
+  /**
+   * Поворот платформы направо
+   */
+  direction currentLeftDir = this->_leftDir;
+  direction currentRightDir = this->_rightDir;
+
+  this->setDirection(FW, BW);
+  this->runAngle(angle * PLATFORM_TURN);
+  this->setDirection(currentLeftDir, currentRightDir);
+}
+
+int RPlatform::getLeftSteps()
+{
+  /**
+   * Возвращает количество шагов левого мотора
+   */
+  return RPlatform::_leftStepsCount;
+}
+
+int RPlatform::getRightSteps()
+{
+  /**
+   * Возвращает количество шагов правого мотора
+   */
+  return RPlatform::_rightStepsCount;
+}
+
+void RPlatform::incLeftSteps()
+{
+  RPlatform::_leftStepsCount++;
+}
+
+void RPlatform::incRightSteps()
+{
+  RPlatform::_rightStepsCount++;
 }

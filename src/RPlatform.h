@@ -7,11 +7,16 @@
 
 #include "Arduino.h"
 
-#define R_F 5
-#define R_B 6
-#define L_F 9
-#define L_B 10
-#define START_BUTTON 14
+#define R_F 5              // правый вперёд
+#define R_B 6              // правый назад
+#define L_F 9              // левый вперёд
+#define L_B 10             // левый назад
+#define START_BUTTON 14    // кнопка Start
+#define L_ENC 3            // пин левого энкодера
+#define R_ENC 2            // пин правого энкодера
+#define FULL_TURN_STEPS 24 // количество шагов на полный оборот колеса
+#define TURN_COEFF 2.5     // для поворота колёс на указанный угол
+#define PLATFORM_TURN 2.6  // для поворота платформы на указанный угол
 
 enum direction
 {
@@ -24,40 +29,43 @@ class RPlatform
 public:
   RPlatform(); // конструктор
   String getLog();
-  uint16_t readSensor(uint8_t portNumber, bool raw = false); // чтение показаний с датчика на позиции sensor
-  bool isStartPressed();                                     // нажата ли кнопка старт
-  void stop(bool fullStop = true);                           // остановка двигателей
+  int readSensor(int portNumber, bool raw = false); // чтение показаний с датчика на позиции sensor
+  bool isStartPressed();                            // нажата ли кнопка старт
+  void stop(bool fullStop = true);                  // остановка двигателей
   void setDirection(direction dir);
   void setDirection(direction dirL, direction dirR);
-  void setPower(uint8_t power);                                                        // одинаковая скорость на оба мотора
-  void setPower(uint8_t powerL, uint8_t powerR);                                       // разная скорость для моторов
-  void setRunSettings(direction dirL, direction dirR, uint8_t powerL, uint8_t powerR); // настройка всех параметров двигателей
-  void run();                                                                          // запуск двигателей
-  void runTime(float seconds);                                                         // запуск двигателей на N секунд
-  void runSteps(uint8_t steps);                                                        // запуск двигателей на N шагов
-  void runAngle(uint8_t angle);                                                        // запуск двигателей на N градусов
-  void resetStepCounters();                                                            // обнуление счётчиков шагов
-  void getLeftSteps();                                                                 // количество шагов левого двигателя
-  void getRightSteps();                                                                // количество шагов правого двигателя
-  void turnLeft(uint8_t angle);                                                        // повернуть налево на заданный угол
-  void turnRight(uint8_t angle);                                                       // повернуть направо на заданный угол
+  void setPower(int power);                                                    // одинаковая скорость на оба мотора
+  void setPower(int powerL, int powerR);                                       // разная скорость для моторов
+  void setRunSettings(direction dirL, direction dirR, int powerL, int powerR); // настройка всех параметров двигателей
+  void run();                                                                  // запуск двигателей
+  void runTime(float seconds);                                                 // запуск двигателей на N секунд
+  void runSteps(int steps);                                                    // запуск двигателей на N шагов
+  void runAngle(int angle);                                                    // запуск двигателей на N градусов
+  static int getLeftSteps();                                                   // количество шагов левого двигателя
+  static int getRightSteps();                                                  // количество шагов правого двигателя
+  void turnLeft(int angle);                                                    // повернуть налево на заданный угол
+  void turnRight(int angle);                                                   // повернуть направо на заданный угол
 
 private:
   void stopLeftMotor(bool fullStop = true);
   void stopRightMotor(bool fullStop = true);
-  void setLeftMotorDirection(direction dir);          // направление левого двигателя
-  void setRightMotorDirection(direction dir);         // направление правого двигателя
-  void setRightMotorPower(uint8_t power);             // скорость правого мотора
-  void setLeftMotorPower(uint8_t power);              // скорость левого мотора
-  void startLeftMotor();                              // запуск левого двигателя с заданным направлением и мощностью
-  void startRightMotor();                             // запуск правого двигателя с заданным направлением и мощностью
-  uint8_t _leftMotorPower;                            // мощность левого двигателя
-  uint8_t _rightMotorPower;                           // мощность правого двигателя
-  direction _leftDir;                                 // направление левого двигателя
-  direction _rightDir;                                // направление правого двигателя
-  bool _isLeftMotorOn;                                // включен ли левый мотор?
-  bool _isRightMotorOn;                               // включен ли правый мотор?
-  uint8_t _sensorPorts[6] = {A0, A1, A2, A3, A4, A5}; // список портов с датчиками
+  void setLeftMotorDirection(direction dir);  // направление левого двигателя
+  void setRightMotorDirection(direction dir); // направление правого двигателя
+  void setRightMotorPower(int power);         // скорость правого мотора
+  void setLeftMotorPower(int power);          // скорость левого мотора
+  void startLeftMotor();                      // запуск левого двигателя с заданным направлением и мощностью
+  void startRightMotor();                     // запуск правого двигателя с заданным направлением и мощностью
+  static void incLeftSteps();
+  static void incRightSteps();
+  int _leftMotorPower;  // мощность левого двигателя
+  int _rightMotorPower; // мощность правого двигателя
+  direction _leftDir;   // направление левого двигателя
+  direction _rightDir;  // направление правого двигателя
+  bool _isLeftMotorOn;  // включен ли левый мотор?
+  bool _isRightMotorOn; // включен ли правый мотор?
+  volatile static int _leftStepsCount;
+  volatile static int _rightStepsCount;
+  int _sensorPorts[6] = {A0, A1, A2, A3, A4, A5}; // список портов с датчиками
 };
 
 #endif
