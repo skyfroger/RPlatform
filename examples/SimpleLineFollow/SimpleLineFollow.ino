@@ -10,24 +10,32 @@
 
 RPlatform robot;
 
-void setup() {
+void setup()
+{
   /*
      В условии цикла проверяем, нажата ли кнопка Start.
      Основная часть программы запуститься с паузой в 3 секунды
      только после нажатия на кнопку.
   */
-  while (!robot.isStartPressed()) {}
+  while (!robot.isStartPressed())
+  {
+  }
   delay(3000);
 }
 
 int lineSensor;
 
-void loop() {
+void loop()
+{
   robot.run();
-  while (true) {
-    if (robot.readSensor(1) > BORDER) {
+  while (true)
+  {
+    if (robot.readSensor(1) > BORDER)
+    {
       robot.setPower(3, 20);
-    } else {
+    }
+    else
+    {
       robot.setPower(20, 3);
     }
   }
