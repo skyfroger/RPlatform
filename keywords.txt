@@ -26,7 +26,7 @@ runAngle	    KEYWORD2
 
 getLeftSteps    KEYWORD2
 getRightSteps   KEYWORD2
-resetStepCounters   KEYWORD2
+resetSteps   KEYWORD2
 turnLeft        KEYWORD2
 turnRight       KEYWORD2
 

@@ -41,10 +41,11 @@ public:
   void runTime(float seconds);                                                 // запуск двигателей на N секунд
   void runSteps(int steps);                                                    // запуск двигателей на N шагов
   void runAngle(int angle);                                                    // запуск двигателей на N градусов
-  static int getLeftSteps();                                                   // количество шагов левого двигателя
-  static int getRightSteps();                                                  // количество шагов правого двигателя
   void turnLeft(int angle);                                                    // повернуть налево на заданный угол
   void turnRight(int angle);                                                   // повернуть направо на заданный угол
+  int getLeftSteps();                                                          // количество шагов левого двигателя
+  int getRightSteps();                                                         // количество шагов правого двигателя
+  void resetSteps();
 
 private:
   void stopLeftMotor(bool fullStop = true);

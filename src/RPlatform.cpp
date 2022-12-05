@@ -290,8 +290,6 @@ void RPlatform::runSteps(int steps)
 
   while (steps > RPlatform::getLeftSteps() - startLCount && steps > RPlatform::getRightSteps() - startRCount)
   {
-    Serial.print(steps);
-    Serial.println(RPlatform::getLeftSteps() - startLCount);
   }
 
   this->stop();
@@ -348,12 +346,27 @@ int RPlatform::getRightSteps()
   return RPlatform::_rightStepsCount;
 }
 
+void RPlatform::resetSteps()
+{
+  /**
+   * Обнуление счётчиков шагов
+   */
+  RPlatform::_leftStepsCount = 0;
+  RPlatform::_rightStepsCount = 0;
+}
+
 void RPlatform::incLeftSteps()
 {
+  /**
+   * Увеличение количества шагов для левого мотора
+   */
   RPlatform::_leftStepsCount++;
 }
 
 void RPlatform::incRightSteps()
 {
+  /**
+   * Увеличение количества шагов для правого мотора
+   */
   RPlatform::_rightStepsCount++;
 }
