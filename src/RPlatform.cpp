@@ -10,14 +10,19 @@ RPlatform::RPlatform()
    * Конструктор класса
    */
 
-  //Пины, которые отвечают за двигатели, настраиваем на вход
+  // пины, которые отвечают за двигатели, настраиваем на вход
   pinMode(R_F, INPUT);
   pinMode(R_B, INPUT);
   pinMode(L_F, INPUT);
   pinMode(L_B, INPUT);
 
+  // пины левого и правого энкодера
   pinMode(L_ENC, INPUT);
   pinMode(R_ENC, INPUT);
+
+  // инициализируем цифровые порты слотов на выход
+  for (int i = 0; i < 6; i++)
+    pinMode(this->_digitalOutputPorst[i], OUTPUT);
 
   // кнопка Start
   pinMode(START_BUTTON, INPUT);
@@ -353,6 +358,22 @@ void RPlatform::resetSteps()
    */
   RPlatform::_leftStepsCount = 0;
   RPlatform::_rightStepsCount = 0;
+}
+
+void RPlatform::ledOn(int portNumber)
+{
+  /**
+   * Включить светодиод на слоте portNumber
+   */
+  digitalWrite(this->_digitalOutputPorst[portNumber], HIGH);
+}
+
+void RPlatform::ledOff(int portNumber)
+{
+  /**
+   * Выключить светодиод на слоте portNumber
+   */
+  digitalWrite(this->_digitalOutputPorst[portNumber], LOW);
 }
 
 void RPlatform::incLeftSteps()

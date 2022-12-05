@@ -46,6 +46,8 @@ public:
   int getLeftSteps();                                                          // количество шагов левого двигателя
   int getRightSteps();                                                         // количество шагов правого двигателя
   void resetSteps();
+  void ledOn(int portNumber);
+  void ledOff(int portNumber);
 
 private:
   void stopLeftMotor(bool fullStop = true);
@@ -66,7 +68,8 @@ private:
   bool _isRightMotorOn; // включен ли правый мотор?
   volatile static int _leftStepsCount;
   volatile static int _rightStepsCount;
-  int _sensorPorts[6] = {A0, A1, A2, A3, A4, A5}; // список портов с датчиками
+  int _sensorPorts[6] = {A0, A1, A2, A3, A4, A5};    // аналоговые пины на портах 1-5
+  int _digitalOutputPorst[6] = {4, 4, 7, 8, 11, 12}; // цифровые пины на портах 1-5
 };
 
 #endif

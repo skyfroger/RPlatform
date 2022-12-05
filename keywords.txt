@@ -23,12 +23,13 @@ run	            KEYWORD2
 runTime	        KEYWORD2
 runSteps	    KEYWORD2
 runAngle	    KEYWORD2
-
 getLeftSteps    KEYWORD2
 getRightSteps   KEYWORD2
-resetSteps   KEYWORD2
+resetSteps      KEYWORD2
 turnLeft        KEYWORD2
 turnRight       KEYWORD2
+ledOn           KEYWORD2
+lefOff          KEYWORD2
 
 #######################################
 # Constants (LITERAL1)
