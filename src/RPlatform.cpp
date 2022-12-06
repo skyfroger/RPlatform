@@ -342,6 +342,24 @@ void RPlatform::runAngle(int angle)
   this->runSteps(steps);
 }
 
+void RPlatform::runAngle(int lAngle, int rAngle)
+{
+  /**
+   * Поворот левого и правого колеса на заданный угол
+   */
+
+  if (lAngle == rAngle)
+  {
+    this->runAngle(lAngle);
+  }
+  else
+  {
+    int stepsL = (lAngle * FULL_TURN_STEPS) / 360;
+    int stepsR = (rAngle * FULL_TURN_STEPS) / 360;
+    this->runSteps(stepsL, stepsR);
+  }
+}
+
 void RPlatform::turnLeft(int angle)
 {
   /**

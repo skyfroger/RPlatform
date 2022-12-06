@@ -42,6 +42,7 @@ public:
   void runSteps(int steps);                                                    // запуск двигателей на N шагов
   void runSteps(int stepsL, int stepsR);                                       // запуск левого и правого мотора на разное количество шагов
   void runAngle(int angle);                                                    // запуск двигателей на N градусов
+  void runAngle(int angleL, int angleR);                                       // поворот левого и правого колеса на заданный угол
   void turnLeft(int angle);                                                    // повернуть налево на заданный угол
   void turnRight(int angle);                                                   // повернуть направо на заданный угол
   int getLeftSteps();                                                          // количество шагов левого двигателя
