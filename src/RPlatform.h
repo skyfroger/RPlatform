@@ -40,6 +40,7 @@ public:
   void run();                                                                  // запуск двигателей
   void runTime(float seconds);                                                 // запуск двигателей на N секунд
   void runSteps(int steps);                                                    // запуск двигателей на N шагов
+  void runSteps(int stepsL, int stepsR);                                       // запуск левого и правого мотора на разное количество шагов
   void runAngle(int angle);                                                    // запуск двигателей на N градусов
   void turnLeft(int angle);                                                    // повернуть налево на заданный угол
   void turnRight(int angle);                                                   // повернуть направо на заданный угол

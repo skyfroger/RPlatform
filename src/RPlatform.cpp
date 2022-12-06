@@ -300,6 +300,39 @@ void RPlatform::runSteps(int steps)
   this->stop();
 }
 
+void RPlatform::runSteps(int stepsL, int stepsR)
+{
+  /**
+   * Запуск левого и правого моторов на разное количество шагов
+   */
+  int startLCount = this->getLeftSteps();
+  int startRCount = this->getRightSteps();
+
+  if (stepsL == stepsR)
+  {
+    // если аргументы равны, вызываем функцию одного параметра
+    this->runSteps(stepsL);
+  }
+  else
+  {
+    // если количество шагов равно нулю, не запускаем мотор вовсе
+    if (stepsL != 0)
+      this->startLeftMotor();
+    if (stepsR != 0)
+      this->startRightMotor();
+
+    while ((stepsL > this->getLeftSteps() - startLCount) || (stepsR > this->getRightSteps() - startRCount))
+    {
+      if (stepsL < this->getLeftSteps() - startLCount)
+        this->stopLeftMotor();
+      if (stepsR < this->getRightSteps() - startRCount)
+        this->stopRightMotor();
+    }
+    // на всякий случай
+    this->stop();
+  }
+}
+
 void RPlatform::runAngle(int angle)
 {
   /**
