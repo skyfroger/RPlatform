@@ -288,12 +288,12 @@ void RPlatform::runSteps(int steps)
   /**
    * Запуск моторов на определённое количество шагов
    */
-  int startLCount = RPlatform::getLeftSteps();
-  int startRCount = RPlatform::getRightSteps();
+  int startLCount = this->getLeftSteps();
+  int startRCount = this->getRightSteps();
 
   this->run();
 
-  while (steps > RPlatform::getLeftSteps() - startLCount && steps > RPlatform::getRightSteps() - startRCount)
+  while (steps > this->getLeftSteps() - startLCount && steps > this->getRightSteps() - startRCount)
   {
   }
 
