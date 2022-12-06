@@ -8,7 +8,7 @@
 // среднее значение между минимальным и максимальным показаниями датчика линии
 #define BORDER 37
 
-RPlatform robot;
+RPlatform robot; // создаём объект класса RPlatform
 
 void setup()
 {
@@ -21,22 +21,21 @@ void setup()
   {
   }
   delay(3000);
+
+  robot.run(); // запускаем моторы
 }
 
 int lineSensor;
 
 void loop()
 {
-  robot.run();
-  while (true)
+
+  if (robot.readSensor(1) > BORDER)
   {
-    if (robot.readSensor(1) > BORDER)
-    {
-      robot.setPower(3, 20);
-    }
-    else
-    {
-      robot.setPower(20, 3);
-    }
+    robot.setPower(3, 20);
+  }
+  else
+  {
+    robot.setPower(20, 3);
   }
 }
