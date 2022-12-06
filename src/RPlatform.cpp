@@ -273,6 +273,38 @@ void RPlatform::run()
   this->startRightMotor();
 }
 
+void RPlatform::run(int leftPower, int rightPower)
+{
+
+  // выбираем направление, исходя из мощности
+  if (rightPower >= 0)
+    this->_rightDir = FW;
+  else
+    this->_rightDir = BW;
+
+  if (leftPower >= 0)
+    this->_leftDir = FW;
+  else
+    this->_leftDir = BW;
+
+  // задаём мощность
+  this->_leftMotorPower = abs(constrain(leftPower, -100, 100));
+  this->_rightMotorPower = abs(constrain(rightPower, -100, 100));
+
+  this->startLeftMotor();
+  this->startRightMotor();
+}
+
+void RPlatform::run(int leftPower, int rightPower, int time)
+{
+  /**
+   * Настройка мощности, направления вращения и запуск на указанное время
+   */
+  this->run(leftPower, rightPower);
+  delay(time * 1000);
+  this->stop();
+}
+
 void RPlatform::runTime(float seconds)
 {
   /**

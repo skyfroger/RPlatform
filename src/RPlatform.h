@@ -38,15 +38,18 @@ public:
   void setPower(int powerL, int powerR);                                       // разная скорость для моторов
   void setRunSettings(direction dirL, direction dirR, int powerL, int powerR); // настройка всех параметров двигателей
   void run();                                                                  // запуск двигателей
-  void runTime(float seconds);                                                 // запуск двигателей на N секунд
-  void runSteps(int steps);                                                    // запуск двигателей на N шагов
-  void runSteps(int stepsL, int stepsR);                                       // запуск левого и правого мотора на разное количество шагов
-  void runAngle(int angle);                                                    // запуск двигателей на N градусов
-  void runAngle(int angleL, int angleR);                                       // поворот левого и правого колеса на заданный угол
-  void turnLeft(int angle);                                                    // повернуть налево на заданный угол
-  void turnRight(int angle);                                                   // повернуть направо на заданный угол
-  int getLeftSteps();                                                          // количество шагов левого двигателя
-  int getRightSteps();                                                         // количество шагов правого двигателя
+  void run(int leftPower, int rightPower);
+  void run(int leftPower, int rightPower, int time);
+  void run(int leftPower, int rightPower, int lAngle, int rAngle);
+  void runTime(float seconds);           // запуск двигателей на N секунд
+  void runSteps(int steps);              // запуск двигателей на N шагов
+  void runSteps(int stepsL, int stepsR); // запуск левого и правого мотора на разное количество шагов
+  void runAngle(int angle);              // запуск двигателей на N градусов
+  void runAngle(int angleL, int angleR); // поворот левого и правого колеса на заданный угол
+  void turnLeft(int angle);              // повернуть налево на заданный угол
+  void turnRight(int angle);             // повернуть направо на заданный угол
+  int getLeftSteps();                    // количество шагов левого двигателя
+  int getRightSteps();                   // количество шагов правого двигателя
   void resetSteps();
   void ledOn(int portNumber);
   void ledOff(int portNumber);
