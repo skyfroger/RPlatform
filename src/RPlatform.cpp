@@ -295,7 +295,7 @@ void RPlatform::move(int leftPower, int rightPower)
   this->startRightMotor();
 }
 
-void RPlatform::move(int leftPower, int rightPower, int time)
+void RPlatform::move(int leftPower, int rightPower, float time)
 {
   /**
    * Настройка мощности, направления вращения и запуск на указанное время
