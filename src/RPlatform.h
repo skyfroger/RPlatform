@@ -38,9 +38,9 @@ public:
   void setPower(int powerL, int powerR);                                       // разная скорость для моторов
   void setRunSettings(direction dirL, direction dirR, int powerL, int powerR); // настройка всех параметров двигателей
   void run();                                                                  // запуск двигателей
-  void run(int leftPower, int rightPower);
-  void run(int leftPower, int rightPower, int time);
-  void run(int leftPower, int rightPower, int lAngle, int rAngle);
+  void move(int leftPower, int rightPower);
+  void move(int leftPower, int rightPower, int time);
+  void move(int leftPower, int rightPower, int lAngle, int rAngle);
   void runTime(float seconds);           // запуск двигателей на N секунд
   void runSteps(int steps);              // запуск двигателей на N шагов
   void runSteps(int stepsL, int stepsR); // запуск левого и правого мотора на разное количество шагов
