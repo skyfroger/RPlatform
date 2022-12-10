@@ -229,7 +229,7 @@ void RPlatform::startLeftMotor()
    */
   this->_isLeftMotorOn = true;
 
-  int pwmValue = map(this->_leftMotorPower, 0, 100, 0, 1023);
+  int pwmValue = map(this->_leftMotorPower, 0, 100, 0, 255);
 
   if (this->_leftDir == FW)
   {
@@ -250,7 +250,7 @@ void RPlatform::startRightMotor()
    */
   this->_isRightMotorOn = true;
 
-  int pwmValue = map(this->_rightMotorPower, 0, 100, 0, 1023);
+  int pwmValue = map(this->_rightMotorPower, 0, 100, 0, 255);
 
   if (this->_rightDir == FW)
   {
